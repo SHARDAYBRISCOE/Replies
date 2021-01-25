@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Boards</title>
-</head>
-<body>
-	<h1>Boards</h1>
-	<table border="1">
-		<thead>
+{% extends 'header_footer.html' %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Boards</li>
+{% endblock %}
+
+{% block content %}
+	<table class="table">
+		<thead class="thead-inverse">
 			<tr>
 				<th>Board</th>
 				<th>Posts</th>
@@ -18,15 +18,15 @@
 			{% for board in boards %}
 			<tr>
 				<td>
-					{{ board.name }} <br>
-					<small style="color: #888">{{ board.description}}</small>
+					<a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a> 
+					<small class="text-muted d-block" style="color: #888">{{ board.description}}</small>
 				</td>
-				<td>0</td>
-				<td>0</td>
+				<td class="align-middle">0</td>
+				<td class="align-middle">0</td>
 				<td></td>
 			</tr>
 			{% endfor %}
 		</tbody>
 	</table>
-</body>
-</html>
+</div>
+{% endblock %}

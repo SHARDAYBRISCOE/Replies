@@ -1,7 +1,7 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Board
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Board, Topic, Post
 from django.http import Http404
-
+from django.contrib.auth.models import User
 
 def home(request):
 	boards = Board.objects.all()
@@ -15,4 +15,23 @@ def board_topics(request, pk):
 
 def new_topic(request, pk):
 	board = get_object_or_404(Board, pk=pk)
+	user = User.objects.first()
+	#get the current logged in User
+	if request.method == 'POST':
+		form = NewTopicForm(request.POST)
+		#We are checking if the request is POST or GET
+		if form.is_valid():
+			#We are asking Django to check the data
+			topic = form.save(commit=False)
+			topic.board = board
+			topic.starter = user
+			topic.save()
+			post = Post.objects.create(
+				message=form.cleaned_data.get('message'),
+				topic=topic,
+				created_by=user
+			)
+			return redirect('board_topics', pk=board.pk) # redirect to the created topic page
+		else:
+			form = NewTopicForm()
 	return render(request, 'new_topic.html', {'board': board})

@@ -1,8 +1,8 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
+from .forms import NewTopicForm
 from .models import Board, Topic, Post
 from django.http import Http404
-from django.contrib.auth.models import User
-from .forms import NewTopicForm
 
 def home(request):
 	boards = Board.objects.all()
@@ -33,6 +33,6 @@ def new_topic(request, pk):
 				created_by=user
 			)
 			return redirect('board_topics', pk=board.pk) # redirect to the created topic page
-		else:
-			form = NewTopicForm()
+	else:
+		form = NewTopicForm()
 	return render(request, 'new_topic.html', {'board': board, 'form': form})

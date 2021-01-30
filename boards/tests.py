@@ -1,10 +1,9 @@
-from django.urls import reverse
 from django.test import TestCase
-from django.urls import resolve
+from django.urls import resolve, reverse
 from .views import home, board_topics, new_topic
 from .models import Board, Topic, Post
 from django.contrib.auth.models import User
-
+import requests
 # Create your tests here.
 
 class HomeTests(TestCase):
@@ -27,13 +26,14 @@ class HomeTests(TestCase):
 
 	def test_home_view_contains_link_to_topics_page(self):
 		board_topics_url = reverse('board_topics', kwargs={'pk': self.board.pk})
-		self.assertContains(self.response, 'href="{0}"', html=True.format(board_topics_url))
+		self.assertContains(self.response, 'href="{0}"'.format(board_topics_url))
 		# we are testing if the response body has the text href="/boards/1/".
+	
 	def test_board_topics_view_contains_link_back_to_homepage(self):
 		board_topics_url = reverse('board_topics', kwargs={'pk': 1})
 		response = self.client.get(board_topics_url)
 		homepage_url = reverse('home')
-		self.assertContains(response, 'href="{0}"', html=True.format(homepage_url))
+		self.assertContains(self.response, 'href="{0}"'.format(homepage_url))
 
 class BoardTopicsTests(TestCase):
 	def setUp(self):
@@ -90,8 +90,8 @@ class NewTopicTests(TestCase):
 
 		response = self.client.get(board_topics_url)
 
-		self.assertContains(response, 'href={0}"'.format(homepage_url))
-		self.assertContains(response, 'href={0}"'.format(new_topic_url))
+		self.assertContains(response, 'href="{0}"'.format(homepage_url))
+		self.assertContains(response, 'href="{0}"'.format(new_topic_url))
 
 		# ensures our view contains the required navigation links
 
